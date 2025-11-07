@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generateLinkedList should generate linked list from empty array with snapshot 1`] = `
+{
+  "next": null,
+  "value": null,
+}
+`;
+
+exports[`generateLinkedList should generate linked list from numbers with snapshot 1`] = `
+{
+  "next": {
+    "next": {
+      "next": {
+        "next": {
+          "next": {
+            "next": null,
+            "value": null,
+          },
+          "value": 50,
+        },
+        "value": 40,
+      },
+      "value": 30,
+    },
+    "value": 20,
+  },
+  "value": 10,
+}
+`;
+
+exports[`generateLinkedList should generate linked list from values 2 1`] = `
+{
+  "next": {
+    "next": {
+      "next": {
+        "next": {
+          "next": null,
+          "value": null,
+        },
+        "value": "d",
+      },
+      "value": "c",
+    },
+    "value": "b",
+  },
+  "value": "a",
+}
+`;
