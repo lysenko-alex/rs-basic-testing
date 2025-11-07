@@ -1,12 +1,19 @@
-import { existsSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { doStuffByInterval, doStuffByTimeout, readFileAsynchronously } from '.';
+import { existsSync } from 'fs';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
-jest.mock('fs');
-jest.mock('fs/promises');
+jest.mock('fs', () => ({
+  existsSync: jest.fn(),
+}));
 
-jest.mock('path');
+jest.mock('fs/promises', () => ({
+  readFile: jest.fn(),
+}));
+
+jest.mock('path', () => ({
+  join: jest.fn(),
+}));
 
 describe('doStuffByTimeout', () => {
   beforeAll(() => {
@@ -86,10 +93,14 @@ describe('doStuffByInterval', () => {
 });
 
 describe('readFileAsynchronously', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('should call join with pathToFile', async () => {
     const pathToFile = 'test.txt';
-    const mockJoin = join as jest.MockedFunction<typeof join>;
-    const mockExistsSync = existsSync as jest.MockedFunction<typeof existsSync>;
+    const mockJoin = jest.mocked(join);
+    const mockExistsSync = jest.mocked(existsSync);
 
     mockJoin.mockReturnValue('/mocked/path/test.txt');
     mockExistsSync.mockReturnValue(false);
@@ -101,8 +112,8 @@ describe('readFileAsynchronously', () => {
 
   test('should return null if file does not exist', async () => {
     const pathToFile = 'nonexistent.txt';
-    const mockJoin = join as jest.MockedFunction<typeof join>;
-    const mockExistsSync = existsSync as jest.MockedFunction<typeof existsSync>;
+    const mockJoin = jest.mocked(join);
+    const mockExistsSync = jest.mocked(existsSync);
 
     mockJoin.mockReturnValue('/mocked/path/nonexistent.txt');
     mockExistsSync.mockReturnValue(false);
@@ -116,9 +127,9 @@ describe('readFileAsynchronously', () => {
   test('should return file content if file exists', async () => {
     const pathToFile = 'existing.txt';
     const fileContent = 'File content';
-    const mockJoin = join as jest.MockedFunction<typeof join>;
-    const mockExistsSync = existsSync as jest.MockedFunction<typeof existsSync>;
-    const mockReadFile = readFile as jest.MockedFunction<typeof readFile>;
+    const mockJoin = jest.mocked(join);
+    const mockExistsSync = jest.mocked(existsSync);
+    const mockReadFile = jest.mocked(readFile);
 
     mockJoin.mockReturnValue('/mocked/path/existing.txt');
     mockExistsSync.mockReturnValue(true);
