@@ -1,30 +1,70 @@
-// Uncomment the code below and write your tests
-// import { throwError, throwCustomError, resolveValue, MyAwesomeError, rejectCustomError } from './index';
+import {
+  MyAwesomeError,
+  rejectCustomError,
+  resolveValue,
+  throwCustomError,
+  throwError,
+} from './index';
 
 describe('resolveValue', () => {
   test('should resolve provided value', async () => {
-    // Write your test here
+    const value = 'test value';
+    const result = await resolveValue(value);
+    expect(result).toBe(value);
+  });
+
+  test('should resolve with different types of values', async () => {
+    await expect(resolveValue(42)).resolves.toBe(42);
+    await expect(resolveValue(null)).resolves.toBeNull();
+    await expect(resolveValue({ key: 'value' })).resolves.toEqual({
+      key: 'value',
+    });
   });
 });
 
 describe('throwError', () => {
   test('should throw error with provided message', () => {
-    // Write your test here
+    const errorMessage = 'Custom error message';
+    expect(() => throwError(errorMessage)).toThrow(errorMessage);
   });
 
   test('should throw error with default message if message is not provided', () => {
-    // Write your test here
+    expect(() => throwError()).toThrow('Oops!');
+  });
+
+  test('should throw an Error instance', () => {
+    expect(() => throwError('test')).toThrow(Error);
   });
 });
 
 describe('throwCustomError', () => {
   test('should throw custom error', () => {
-    // Write your test here
+    expect(() => throwCustomError()).toThrow(MyAwesomeError);
+  });
+
+  test('should throw error with custom message', () => {
+    expect(() => throwCustomError()).toThrow(
+      'This is my awesome custom error!',
+    );
+  });
+
+  test('should throw instance of Error', () => {
+    expect(() => throwCustomError()).toThrow(Error);
   });
 });
 
 describe('rejectCustomError', () => {
   test('should reject custom error', async () => {
-    // Write your test here
+    await expect(rejectCustomError()).rejects.toThrow(MyAwesomeError);
+  });
+
+  test('should reject with custom error message', async () => {
+    await expect(rejectCustomError()).rejects.toThrow(
+      'This is my awesome custom error!',
+    );
+  });
+
+  test('should reject with Error instance', async () => {
+    await expect(rejectCustomError()).rejects.toThrow(Error);
   });
 });
